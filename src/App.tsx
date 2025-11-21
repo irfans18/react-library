@@ -1,34 +1,56 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Route, Routes } from 'react-router-dom'
+import LoginPage from '@/pages/auth/LoginPage'
+import RegisterPage from '@/pages/auth/RegisterPage'
+import BookListPage from '@/pages/books/BookListPage'
+import BrowseBooksPage from '@/pages/books/BrowseBooksPage'
+import BookDetailPage from '@/pages/books/BookDetailPage'
+import MyLoansPage from '@/pages/loans/MyLoansPage'
+import ProfilePage from '@/pages/profile/ProfilePage'
+import CartPage from '@/pages/cart/CartPage'
+import AdminDashboardPage from '@/pages/admin/AdminDashboardPage'
+import NotFoundPage from '@/pages/not-found/NotFoundPage'
+import { ProtectedRoute } from '@/components/navigation/ProtectedRoute'
+import { AppLayout } from '@/components/layout/AppLayout'
+import { AuthLayout } from '@/components/layout/AuthLayout'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs bg-black">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <Routes>
+      <Route
+        element={
+          <AuthLayout>
+            <LoginPage />
+          </AuthLayout>
+        }
+        path="/login"
+      />
+      <Route
+        element={
+          <AuthLayout>
+            <RegisterPage />
+          </AuthLayout>
+        }
+        path="/register"
+      />
+
+      <Route
+        element={
+          <ProtectedRoute>
+            <AppLayout />
+          </ProtectedRoute>
+        }
+      >
+        <Route path="/" element={<BookListPage />} />
+        <Route path="/browse" element={<BrowseBooksPage />} />
+        <Route path="/books/:id" element={<BookDetailPage />} />
+        <Route path="/loans" element={<MyLoansPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="/admin" element={<AdminDashboardPage />} />
+      </Route>
+
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes>
   )
 }
 
